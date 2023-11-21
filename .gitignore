@@ -22,3 +22,4 @@ node_modules/
 # WebStorm
 #//////////////////////////
 .idea/
+assets/Scripts/proto/game.proto
