@@ -1,6 +1,5 @@
 import { _decorator, Component, EditBox, find, Node, Toggle } from 'cc';
 import { ProtocolManager } from './ProtocolManager';
-import protobufjs from 'protobufjs'
 import  proto  from './proto/proto.js';
 import { ProtobufUtil } from './proto/util';
 
@@ -20,8 +19,7 @@ export class Group extends Component {
     public groupType =0//组类型
    private  pomelo 
     start() {
-        console.log(protobufjs)
-        if (this.groupType==1){
+        if (this.groupType==2){
             let menuObj=find("menu",this.node)
             menuObj.active=false
         }
@@ -30,23 +28,43 @@ export class Group extends Component {
         this.pomelo.on("disconnect",ProtocolManager.onDisconnect)
         this.pomelo.init({host: ProtocolManager.host, port: ProtocolManager.port, path: '/'}, function () {
             console.log("connected!");
-            let req=   proto.pb.LoginReq.create()
-            req.username=this.groupType
-            console.log(req)
-            let bytes=ProtobufUtil.PbEncode(req)
-            this.pomelo.request("game.player.login", bytes, function (data) {
             
-                console.log(data);
+            let req=   proto.pb.LoginReq.create()
+            req.username=this.groupType.toString()
+            let bytes=ProtobufUtil.PbEncode(req)
+            this.pomelo.request("gate.users.login", bytes, function (data) {
+                let res= proto.pb.LoginRes.decode(data.body)
+                console.log(data,res);
+                this.enterRoom()
     
-    
-            });
+            }.bind(this));
         }.bind(this))
     }
 
     update(deltaTime: number) {
         
     }
-   
+    enterRoom(){
+        let req=   proto.pb.EnterRoomReq.create()
+        req.rid=1
+        let bytes=ProtobufUtil.PbEncode(req)
+        this.pomelo.request("game.player.enterRoom", bytes, function (data) {
+            let res= proto.pb.EnterRoomRes.decode(data.body)
+            console.log(data,res);
+            this.ready(req.rid)
+        }.bind(this));
+    }
+
+    ready(rid ){
+        let req=   proto.pb.ReadyReq.create()
+        let bytes=ProtobufUtil.PbEncode(req)
+        this.pomelo.request("room.room.ready", bytes, function (data) {
+            let res= proto.pb.ReadyRes.decode(data.body)
+            console.log(data,res);
+
+
+        });
+    }
 }
 
  
