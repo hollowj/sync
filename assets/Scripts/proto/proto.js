@@ -1943,6 +1943,230 @@ $root.pb = (function() {
         return GameCMD;
     })();
 
+    pb.GameCMDs = (function() {
+
+        /**
+         * Properties of a GameCMDs.
+         * @memberof pb
+         * @interface IGameCMDs
+         * @property {Array.<pb.IGameCMD>|null} [cmds] GameCMDs cmds
+         */
+
+        /**
+         * Constructs a new GameCMDs.
+         * @memberof pb
+         * @classdesc Represents a GameCMDs.
+         * @implements IGameCMDs
+         * @constructor
+         * @param {pb.IGameCMDs=} [properties] Properties to set
+         */
+        function GameCMDs(properties) {
+            this.cmds = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GameCMDs cmds.
+         * @member {Array.<pb.IGameCMD>} cmds
+         * @memberof pb.GameCMDs
+         * @instance
+         */
+        GameCMDs.prototype.cmds = $util.emptyArray;
+
+        /**
+         * Creates a new GameCMDs instance using the specified properties.
+         * @function create
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {pb.IGameCMDs=} [properties] Properties to set
+         * @returns {pb.GameCMDs} GameCMDs instance
+         */
+        GameCMDs.create = function create(properties) {
+            return new GameCMDs(properties);
+        };
+
+        /**
+         * Encodes the specified GameCMDs message. Does not implicitly {@link pb.GameCMDs.verify|verify} messages.
+         * @function encode
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {pb.IGameCMDs} message GameCMDs message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameCMDs.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.cmds != null && message.cmds.length)
+                for (var i = 0; i < message.cmds.length; ++i)
+                    $root.pb.GameCMD.encode(message.cmds[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GameCMDs message, length delimited. Does not implicitly {@link pb.GameCMDs.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {pb.IGameCMDs} message GameCMDs message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameCMDs.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GameCMDs message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.GameCMDs} GameCMDs
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameCMDs.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.GameCMDs();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        if (!(message.cmds && message.cmds.length))
+                            message.cmds = [];
+                        message.cmds.push($root.pb.GameCMD.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GameCMDs message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.GameCMDs} GameCMDs
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameCMDs.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GameCMDs message.
+         * @function verify
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GameCMDs.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.cmds != null && message.hasOwnProperty("cmds")) {
+                if (!Array.isArray(message.cmds))
+                    return "cmds: array expected";
+                for (var i = 0; i < message.cmds.length; ++i) {
+                    var error = $root.pb.GameCMD.verify(message.cmds[i]);
+                    if (error)
+                        return "cmds." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a GameCMDs message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.GameCMDs} GameCMDs
+         */
+        GameCMDs.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.GameCMDs)
+                return object;
+            var message = new $root.pb.GameCMDs();
+            if (object.cmds) {
+                if (!Array.isArray(object.cmds))
+                    throw TypeError(".pb.GameCMDs.cmds: array expected");
+                message.cmds = [];
+                for (var i = 0; i < object.cmds.length; ++i) {
+                    if (typeof object.cmds[i] !== "object")
+                        throw TypeError(".pb.GameCMDs.cmds: object expected");
+                    message.cmds[i] = $root.pb.GameCMD.fromObject(object.cmds[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GameCMDs message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {pb.GameCMDs} message GameCMDs
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GameCMDs.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.arrays || options.defaults)
+                object.cmds = [];
+            if (message.cmds && message.cmds.length) {
+                object.cmds = [];
+                for (var j = 0; j < message.cmds.length; ++j)
+                    object.cmds[j] = $root.pb.GameCMD.toObject(message.cmds[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this GameCMDs to JSON.
+         * @function toJSON
+         * @memberof pb.GameCMDs
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GameCMDs.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for GameCMDs
+         * @function getTypeUrl
+         * @memberof pb.GameCMDs
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        GameCMDs.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/pb.GameCMDs";
+        };
+
+        return GameCMDs;
+    })();
+
     return pb;
 })();
 
