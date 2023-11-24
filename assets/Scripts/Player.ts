@@ -1,4 +1,4 @@
-import { _decorator, Component, EventKeyboard, find, Input, input, KeyCode, Node, Vec3 } from 'cc';
+import { _decorator, Component, EventKeyboard, find, Input, input, KeyCode, Label, Node, Vec3 } from 'cc';
 import { Group } from './GroupManager';
 const { ccclass, property } = _decorator;
 import proto from './proto/proto.js';
@@ -17,10 +17,12 @@ export class Player extends Component {
     private group: Group
     private isStart: boolean
     private red: Node
+    private lbl_ping: Label
     private delay: number
     private msgQueue: Array<DelayMsg> = []
     start() {
         this.red = find("red", this.node)
+        this.lbl_ping = find("ping", this.node).getComponent(Label)
         this.group = this.getComponent(Group)
         this.group.txt_delay.node.on("text-changed", this.onDelayChange, this)
         this.onDelayChange()
@@ -88,10 +90,25 @@ export class Player extends Component {
     }
     onLogicTick() {
         this.logicTick++
+        this.sendPing()
         this.sendCMD()
     }
     getPomelo() {
         return this.group.pomelo
+    }
+    sendPing() {
+        if (this.getPomelo() != null) {
+            let cmd = proto.pb.PingReq.create()
+            cmd.clientTickNo = this.logicTick
+            let bytes = ProtobufUtil.PbEncode(cmd)
+            let sendTime=Date.now()
+            this.getPomelo().request("room.room.ping", bytes, function (data) {
+                // let pong = proto.pb.PongRes.decode(data.body)
+                let delay=Date.now()-sendTime+this.getDelay()
+                this.lbl_ping.string="ping:"+delay
+
+            }.bind(this))
+        }
     }
     sendCMD() {
         if (this.getPomelo() != null) {

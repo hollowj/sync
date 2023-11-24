@@ -3,6 +3,200 @@
 /** Namespace pb. */
 export namespace pb {
 
+    /** Properties of a PingReq. */
+    interface IPingReq {
+
+        /** PingReq clientTickNo */
+        clientTickNo?: (number|null);
+    }
+
+    /** Represents a PingReq. */
+    class PingReq implements IPingReq {
+
+        /**
+         * Constructs a new PingReq.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IPingReq);
+
+        /** PingReq clientTickNo. */
+        public clientTickNo: number;
+
+        /**
+         * Creates a new PingReq instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns PingReq instance
+         */
+        public static create(properties?: pb.IPingReq): pb.PingReq;
+
+        /**
+         * Encodes the specified PingReq message. Does not implicitly {@link pb.PingReq.verify|verify} messages.
+         * @param message PingReq message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IPingReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified PingReq message, length delimited. Does not implicitly {@link pb.PingReq.verify|verify} messages.
+         * @param message PingReq message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IPingReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a PingReq message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns PingReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.PingReq;
+
+        /**
+         * Decodes a PingReq message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns PingReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.PingReq;
+
+        /**
+         * Verifies a PingReq message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a PingReq message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns PingReq
+         */
+        public static fromObject(object: { [k: string]: any }): pb.PingReq;
+
+        /**
+         * Creates a plain object from a PingReq message. Also converts values to other types if specified.
+         * @param message PingReq
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.PingReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this PingReq to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PingReq
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a PongRes. */
+    interface IPongRes {
+
+        /** PongRes serverTickNo */
+        serverTickNo?: (number|null);
+    }
+
+    /** Represents a PongRes. */
+    class PongRes implements IPongRes {
+
+        /**
+         * Constructs a new PongRes.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IPongRes);
+
+        /** PongRes serverTickNo. */
+        public serverTickNo: number;
+
+        /**
+         * Creates a new PongRes instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns PongRes instance
+         */
+        public static create(properties?: pb.IPongRes): pb.PongRes;
+
+        /**
+         * Encodes the specified PongRes message. Does not implicitly {@link pb.PongRes.verify|verify} messages.
+         * @param message PongRes message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IPongRes, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified PongRes message, length delimited. Does not implicitly {@link pb.PongRes.verify|verify} messages.
+         * @param message PongRes message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IPongRes, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a PongRes message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns PongRes
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.PongRes;
+
+        /**
+         * Decodes a PongRes message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns PongRes
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.PongRes;
+
+        /**
+         * Verifies a PongRes message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a PongRes message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns PongRes
+         */
+        public static fromObject(object: { [k: string]: any }): pb.PongRes;
+
+        /**
+         * Creates a plain object from a PongRes message. Also converts values to other types if specified.
+         * @param message PongRes
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.PongRes, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this PongRes to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for PongRes
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
     /** Properties of a LoginReq. */
     interface ILoginReq {
 
