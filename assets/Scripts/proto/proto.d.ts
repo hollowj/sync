@@ -693,4 +693,204 @@ export namespace pb {
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
     }
+
+    /** Properties of a GameStartNotify. */
+    interface IGameStartNotify {
+    }
+
+    /** Represents a GameStartNotify. */
+    class GameStartNotify implements IGameStartNotify {
+
+        /**
+         * Constructs a new GameStartNotify.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGameStartNotify);
+
+        /**
+         * Creates a new GameStartNotify instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GameStartNotify instance
+         */
+        public static create(properties?: pb.IGameStartNotify): pb.GameStartNotify;
+
+        /**
+         * Encodes the specified GameStartNotify message. Does not implicitly {@link pb.GameStartNotify.verify|verify} messages.
+         * @param message GameStartNotify message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGameStartNotify, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GameStartNotify message, length delimited. Does not implicitly {@link pb.GameStartNotify.verify|verify} messages.
+         * @param message GameStartNotify message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGameStartNotify, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GameStartNotify message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GameStartNotify
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GameStartNotify;
+
+        /**
+         * Decodes a GameStartNotify message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GameStartNotify
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GameStartNotify;
+
+        /**
+         * Verifies a GameStartNotify message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GameStartNotify message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GameStartNotify
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GameStartNotify;
+
+        /**
+         * Creates a plain object from a GameStartNotify message. Also converts values to other types if specified.
+         * @param message GameStartNotify
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GameStartNotify, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GameStartNotify to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for GameStartNotify
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a GameCMD. */
+    interface IGameCMD {
+
+        /** GameCMD tickNo */
+        tickNo?: (number|null);
+
+        /** GameCMD dir */
+        dir?: (number|null);
+
+        /** GameCMD uid */
+        uid?: (number|null);
+    }
+
+    /** Represents a GameCMD. */
+    class GameCMD implements IGameCMD {
+
+        /**
+         * Constructs a new GameCMD.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: pb.IGameCMD);
+
+        /** GameCMD tickNo. */
+        public tickNo: number;
+
+        /** GameCMD dir. */
+        public dir: number;
+
+        /** GameCMD uid. */
+        public uid: number;
+
+        /**
+         * Creates a new GameCMD instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns GameCMD instance
+         */
+        public static create(properties?: pb.IGameCMD): pb.GameCMD;
+
+        /**
+         * Encodes the specified GameCMD message. Does not implicitly {@link pb.GameCMD.verify|verify} messages.
+         * @param message GameCMD message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: pb.IGameCMD, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified GameCMD message, length delimited. Does not implicitly {@link pb.GameCMD.verify|verify} messages.
+         * @param message GameCMD message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: pb.IGameCMD, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a GameCMD message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns GameCMD
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pb.GameCMD;
+
+        /**
+         * Decodes a GameCMD message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns GameCMD
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pb.GameCMD;
+
+        /**
+         * Verifies a GameCMD message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a GameCMD message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns GameCMD
+         */
+        public static fromObject(object: { [k: string]: any }): pb.GameCMD;
+
+        /**
+         * Creates a plain object from a GameCMD message. Also converts values to other types if specified.
+         * @param message GameCMD
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: pb.GameCMD, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this GameCMD to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for GameCMD
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
 }

@@ -467,7 +467,7 @@ function newPomelo() {
 
   Emitter.prototype.emit = function(event){
     this._callbacks = this._callbacks || {};
-    var args = [].slice.call(arguments, event, 1)
+    var args = [].slice.call(arguments, 1)
       , callbacks = this._callbacks[event];
 
     if (callbacks) {
