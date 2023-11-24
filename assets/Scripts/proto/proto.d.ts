@@ -897,6 +897,9 @@ export namespace pb {
     /** Properties of a GameCMDs. */
     interface IGameCMDs {
 
+        /** GameCMDs tickNo */
+        tickNo?: (number|null);
+
         /** GameCMDs cmds */
         cmds?: (pb.IGameCMD[]|null);
     }
@@ -909,6 +912,9 @@ export namespace pb {
          * @param [properties] Properties to set
          */
         constructor(properties?: pb.IGameCMDs);
+
+        /** GameCMDs tickNo. */
+        public tickNo: number;
 
         /** GameCMDs cmds. */
         public cmds: pb.IGameCMD[];

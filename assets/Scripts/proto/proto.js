@@ -1949,6 +1949,7 @@ $root.pb = (function() {
          * Properties of a GameCMDs.
          * @memberof pb
          * @interface IGameCMDs
+         * @property {number|null} [tickNo] GameCMDs tickNo
          * @property {Array.<pb.IGameCMD>|null} [cmds] GameCMDs cmds
          */
 
@@ -1967,6 +1968,14 @@ $root.pb = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * GameCMDs tickNo.
+         * @member {number} tickNo
+         * @memberof pb.GameCMDs
+         * @instance
+         */
+        GameCMDs.prototype.tickNo = 0;
 
         /**
          * GameCMDs cmds.
@@ -2000,9 +2009,11 @@ $root.pb = (function() {
         GameCMDs.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.tickNo != null && Object.hasOwnProperty.call(message, "tickNo"))
+                writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.tickNo);
             if (message.cmds != null && message.cmds.length)
                 for (var i = 0; i < message.cmds.length; ++i)
-                    $root.pb.GameCMD.encode(message.cmds[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    $root.pb.GameCMD.encode(message.cmds[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
             return writer;
         };
 
@@ -2038,6 +2049,10 @@ $root.pb = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1: {
+                        message.tickNo = reader.uint32();
+                        break;
+                    }
+                case 2: {
                         if (!(message.cmds && message.cmds.length))
                             message.cmds = [];
                         message.cmds.push($root.pb.GameCMD.decode(reader, reader.uint32()));
@@ -2078,6 +2093,9 @@ $root.pb = (function() {
         GameCMDs.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.tickNo != null && message.hasOwnProperty("tickNo"))
+                if (!$util.isInteger(message.tickNo))
+                    return "tickNo: integer expected";
             if (message.cmds != null && message.hasOwnProperty("cmds")) {
                 if (!Array.isArray(message.cmds))
                     return "cmds: array expected";
@@ -2102,6 +2120,8 @@ $root.pb = (function() {
             if (object instanceof $root.pb.GameCMDs)
                 return object;
             var message = new $root.pb.GameCMDs();
+            if (object.tickNo != null)
+                message.tickNo = object.tickNo >>> 0;
             if (object.cmds) {
                 if (!Array.isArray(object.cmds))
                     throw TypeError(".pb.GameCMDs.cmds: array expected");
@@ -2130,6 +2150,10 @@ $root.pb = (function() {
             var object = {};
             if (options.arrays || options.defaults)
                 object.cmds = [];
+            if (options.defaults)
+                object.tickNo = 0;
+            if (message.tickNo != null && message.hasOwnProperty("tickNo"))
+                object.tickNo = message.tickNo;
             if (message.cmds && message.cmds.length) {
                 object.cmds = [];
                 for (var j = 0; j < message.cmds.length; ++j)
