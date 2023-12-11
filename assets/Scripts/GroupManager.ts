@@ -28,21 +28,21 @@ export class Group extends Component {
         this.pomelo= window.newPomelo()
         this.pomelo.on("io-error",ProtocolManager.onWSError)
         this.pomelo.on("disconnect",ProtocolManager.onDisconnect)
-        this.pomelo.on("disconnect",this.onDisconnect.bind(this))
-        this.pomelo.init({host: ProtocolManager.host, port: ProtocolManager.port, path: '/'}, function () {
+        this.pomelo.on("disconnect",this.onDisconnect)
+        this.pomelo.init({host: ProtocolManager.host, port: ProtocolManager.port, path: '/'},  ()=> {
             console.log("connected!");
             
             let req=   proto.pb.LoginReq.create()
             req.username=this.groupType.toString()
             let bytes=ProtobufUtil.PbEncode(req)
-            this.pomelo.request("gate.users.login", bytes, function (data) {
+            this.pomelo.request("gate.users.login", bytes,  (data) =>{
                 let res= proto.pb.LoginRes.decode(data.body)
                 console.log(data,res);
                 this.enterRoom()
     
-            }.bind(this));
-        }.bind(this))
-        this.pomelo.on("gamestart",this.onStart.bind(this))
+            });
+        })
+        this.pomelo.on("gamestart",this.onStart)
 
     }
 
@@ -53,11 +53,11 @@ export class Group extends Component {
         let req=   proto.pb.EnterRoomReq.create()
         req.rid=1
         let bytes=ProtobufUtil.PbEncode(req)
-        this.pomelo.request("game.player.enterRoom", bytes, function (data) {
+        this.pomelo.request("game.player.enterRoom", bytes,  (data)=> {
             let res= proto.pb.EnterRoomRes.decode(data.body)
             console.log(data,res);
             this.ready(req.rid)
-        }.bind(this));
+        });
     }
 
     ready(rid ){
@@ -70,14 +70,22 @@ export class Group extends Component {
 
         });
     }
-    onStart(data ){
+    onStart=(data )=>{
         let res= proto.pb.GameStartNotify.decode(data)
         console.log(res);
-        this.node.dispatchEvent(new GameEvent(Event_GameStart))
+        this.node.dispatchEvent(new GameEvent(Event_GameStart,false,res))
     }
-     onDisconnect(event){
+     onDisconnect=(event)=>{
        this.pomelo=null
     }
-
+    enablePredict(){
+       return  this.tg_predict.isChecked
+    }
+    enableSettle(){
+        return  this.tg_settle.isChecked
+     }
+     enableInterpolation(){
+        return  this.tg_interpolation.isChecked
+     }
 }
 

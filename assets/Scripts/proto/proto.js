@@ -1930,6 +1930,7 @@ $root.pb = (function() {
          * Properties of a GameStartNotify.
          * @memberof pb
          * @interface IGameStartNotify
+         * @property {number|null} [tickNo] GameStartNotify tickNo
          */
 
         /**
@@ -1946,6 +1947,14 @@ $root.pb = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
+
+        /**
+         * GameStartNotify tickNo.
+         * @member {number} tickNo
+         * @memberof pb.GameStartNotify
+         * @instance
+         */
+        GameStartNotify.prototype.tickNo = 0;
 
         /**
          * Creates a new GameStartNotify instance using the specified properties.
@@ -1971,6 +1980,8 @@ $root.pb = (function() {
         GameStartNotify.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
+            if (message.tickNo != null && Object.hasOwnProperty.call(message, "tickNo"))
+                writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.tickNo);
             return writer;
         };
 
@@ -2005,6 +2016,10 @@ $root.pb = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 1: {
+                        message.tickNo = reader.uint32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2040,6 +2055,9 @@ $root.pb = (function() {
         GameStartNotify.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.tickNo != null && message.hasOwnProperty("tickNo"))
+                if (!$util.isInteger(message.tickNo))
+                    return "tickNo: integer expected";
             return null;
         };
 
@@ -2054,7 +2072,10 @@ $root.pb = (function() {
         GameStartNotify.fromObject = function fromObject(object) {
             if (object instanceof $root.pb.GameStartNotify)
                 return object;
-            return new $root.pb.GameStartNotify();
+            var message = new $root.pb.GameStartNotify();
+            if (object.tickNo != null)
+                message.tickNo = object.tickNo >>> 0;
+            return message;
         };
 
         /**
@@ -2066,8 +2087,15 @@ $root.pb = (function() {
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        GameStartNotify.toObject = function toObject() {
-            return {};
+        GameStartNotify.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.tickNo = 0;
+            if (message.tickNo != null && message.hasOwnProperty("tickNo"))
+                object.tickNo = message.tickNo;
+            return object;
         };
 
         /**

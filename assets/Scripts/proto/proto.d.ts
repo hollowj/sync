@@ -890,6 +890,9 @@ export namespace pb {
 
     /** Properties of a GameStartNotify. */
     interface IGameStartNotify {
+
+        /** GameStartNotify tickNo */
+        tickNo?: (number|null);
     }
 
     /** Represents a GameStartNotify. */
@@ -900,6 +903,9 @@ export namespace pb {
          * @param [properties] Properties to set
          */
         constructor(properties?: pb.IGameStartNotify);
+
+        /** GameStartNotify tickNo. */
+        public tickNo: number;
 
         /**
          * Creates a new GameStartNotify instance using the specified properties.
