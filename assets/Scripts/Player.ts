@@ -6,7 +6,9 @@ import { ProtobufUtil } from './proto/util';
 import { GameEvent } from './GameEvent';
 import { Event_GameStart } from './Consts';
 import { PlayerMgr } from './PlayerMgr';
-const frameDuration = 0.033;//帧间隔
+const frameStdDuration = 0.033;//帧间隔
+const frameSlowDuration = frameStdDuration * 1.2;//帧间隔
+const frameFastDuration = frameStdDuration * 0.8;//帧间隔
 export const speed = 8
 class PlayerLogicData {
     serverCmdMap: Map<number, Map<number, proto.pb.IGameCMD>>
@@ -62,6 +64,7 @@ export class Player extends Component {
     private blue: Node
     private lbl_ping: Label
     private delay: number
+    private offset: number
 
     start() {
         this.red = find("red", this.node)
@@ -88,12 +91,20 @@ export class Player extends Component {
 
         this.getPomelo().on("logicTick", this.onCMDs)
     }
+    getFrameDuration() {
+        if (this.offset == 0) {
+            return frameStdDuration
+        } else if (this.offset > 0) {
+            return frameFastDuration
+        }
+        return frameSlowDuration
+    }
     update(deltaTime: number) {
         if (this.isStart) {
 
             this.tickTime += deltaTime
-            if (this.tickTime >= frameDuration) {
-                this.tickTime -= frameDuration
+            if (this.tickTime >= this.getFrameDuration()) {
+                this.tickTime -= this.getFrameDuration()
                 this.onLogicTick()
             }
         }
@@ -132,18 +143,36 @@ export class Player extends Component {
     getPomelo() {
         return this.group.pomelo
     }
-    sendPing() {
+    sendPing = () => {
         if (this.getPomelo() != null) {
             let cmd = proto.pb.PingReq.create()
             cmd.clientTickNo = this.logicData.clientTick
             let bytes = ProtobufUtil.PbEncode(cmd)
             let sendTime = Date.now()
-            this.getPomelo().request("room.room.ping", bytes, (data) => {
-                // let pong = proto.pb.PongRes.decode(data.body)
-                let delay = Date.now() - sendTime + this.getDelay()
-                this.lbl_ping.string = "ping:" + delay
-
+            this.delayDo(() => {
+                this.getPomelo().request("room.room.ping", bytes, (data) => {
+                    this.delayDo(()=>{
+                        let delay = Date.now() - sendTime 
+                        this.lbl_ping.string = "ping:" + delay
+                        let pong = proto.pb.PongRes.decode(data.body)
+                        if (pong.serverTickNo+delay/(this.getFrameDuration()*1000) > this.logicData.clientTick) {
+                            this.offset = 1
+                            // console.log("加速", pong.serverTickNo, this.logicData.clientTick)
+                        } else if (pong.serverTickNo + 5 < this.logicData.clientTick) {
+                            // console.log("减速")
+                            this.offset = -1
+                        } else {
+                            this.offset = 0
+                            // console.log("常速")
+    
+                        }
+                    })
+                   
+                })
             })
+
+
+
         }
     }
     sendCMD() {
@@ -170,6 +199,7 @@ export class Player extends Component {
             f()
         }, this.getDelay() / 2);
     }
+
     onCMDs = (data) => {
         let msg = proto.pb.GameCMDs.decode(data)
         this.logicData.logicTick = msg.tickNo
@@ -185,13 +215,14 @@ export class Player extends Component {
             });
         })
 
+
     }
     onCMD(cmd: proto.pb.IGameCMD, fromServer: boolean) {
         if (cmd.uid != 1) {
             return
         }
         if (cmd.dir != 0) {
-            console.log(`onCMD${this.group.groupType} `, cmd,fromServer)
+            console.log(`onCMD${this.group.groupType} before `, cmd, fromServer, this.red.position)
         }
         let pos = this.red.position
         if (!this.logicData.logicPos) {
@@ -205,6 +236,9 @@ export class Player extends Component {
         this.red.position = newPos
         if (fromServer) {
             this.logicData.logicPos = newPos
+        }
+        if (cmd.dir != 0) {
+            console.log(`onCMD${this.group.groupType} after`, cmd, fromServer, this.red.position)
         }
     }
     onDelayChange() {
@@ -220,8 +254,10 @@ export class Player extends Component {
     executeServerCmd() {
         for (let tickNo = this.logicData.lastVerifyTick + 1; tickNo < this.logicData.serverTick; tickNo++) {
             const cmdMap = this.logicData.serverCmdMap.get(tickNo);
-            for (const cmd of cmdMap.values()) {
-                this.onCMD(cmd, true)
+            if (cmdMap) {
+                for (const cmd of cmdMap.values()) {
+                    this.onCMD(cmd, true)
+                }
             }
         }
     }

@@ -2625,6 +2625,209 @@ $root.pb = (function() {
         return GameCMDs;
     })();
 
+    pb.TransmissionNotify = (function() {
+
+        /**
+         * Properties of a TransmissionNotify.
+         * @memberof pb
+         * @interface ITransmissionNotify
+         * @property {number|null} [factor] TransmissionNotify factor
+         */
+
+        /**
+         * Constructs a new TransmissionNotify.
+         * @memberof pb
+         * @classdesc Represents a TransmissionNotify.
+         * @implements ITransmissionNotify
+         * @constructor
+         * @param {pb.ITransmissionNotify=} [properties] Properties to set
+         */
+        function TransmissionNotify(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * TransmissionNotify factor.
+         * @member {number} factor
+         * @memberof pb.TransmissionNotify
+         * @instance
+         */
+        TransmissionNotify.prototype.factor = 0;
+
+        /**
+         * Creates a new TransmissionNotify instance using the specified properties.
+         * @function create
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {pb.ITransmissionNotify=} [properties] Properties to set
+         * @returns {pb.TransmissionNotify} TransmissionNotify instance
+         */
+        TransmissionNotify.create = function create(properties) {
+            return new TransmissionNotify(properties);
+        };
+
+        /**
+         * Encodes the specified TransmissionNotify message. Does not implicitly {@link pb.TransmissionNotify.verify|verify} messages.
+         * @function encode
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {pb.ITransmissionNotify} message TransmissionNotify message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TransmissionNotify.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.factor != null && Object.hasOwnProperty.call(message, "factor"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.factor);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified TransmissionNotify message, length delimited. Does not implicitly {@link pb.TransmissionNotify.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {pb.ITransmissionNotify} message TransmissionNotify message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        TransmissionNotify.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a TransmissionNotify message from the specified reader or buffer.
+         * @function decode
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {pb.TransmissionNotify} TransmissionNotify
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TransmissionNotify.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pb.TransmissionNotify();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.factor = reader.int32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a TransmissionNotify message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {pb.TransmissionNotify} TransmissionNotify
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        TransmissionNotify.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a TransmissionNotify message.
+         * @function verify
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        TransmissionNotify.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.factor != null && message.hasOwnProperty("factor"))
+                if (!$util.isInteger(message.factor))
+                    return "factor: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates a TransmissionNotify message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {pb.TransmissionNotify} TransmissionNotify
+         */
+        TransmissionNotify.fromObject = function fromObject(object) {
+            if (object instanceof $root.pb.TransmissionNotify)
+                return object;
+            var message = new $root.pb.TransmissionNotify();
+            if (object.factor != null)
+                message.factor = object.factor | 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a TransmissionNotify message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {pb.TransmissionNotify} message TransmissionNotify
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        TransmissionNotify.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.factor = 0;
+            if (message.factor != null && message.hasOwnProperty("factor"))
+                object.factor = message.factor;
+            return object;
+        };
+
+        /**
+         * Converts this TransmissionNotify to JSON.
+         * @function toJSON
+         * @memberof pb.TransmissionNotify
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        TransmissionNotify.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for TransmissionNotify
+         * @function getTypeUrl
+         * @memberof pb.TransmissionNotify
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        TransmissionNotify.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/pb.TransmissionNotify";
+        };
+
+        return TransmissionNotify;
+    })();
+
     return pb;
 })();
 
