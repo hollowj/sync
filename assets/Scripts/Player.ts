@@ -1,4 +1,4 @@
-import { _decorator, Component, EventKeyboard, find, Input, input, KeyCode, Label, Node, Vec3 } from 'cc';
+import { _decorator, Component, EventKeyboard, find, Input, input, KeyCode, Label, Node, Tween, Vec3 } from 'cc';
 import { Group } from './GroupManager';
 const { ccclass, property } = _decorator;
 import proto from './proto/proto.js';
@@ -6,10 +6,8 @@ import { ProtobufUtil } from './proto/util';
 import { GameEvent } from './GameEvent';
 import { Event_GameStart } from './Consts';
 import { PlayerMgr } from './PlayerMgr';
-const frameStdDuration = 0.033;//帧间隔
-const frameSlowDuration = frameStdDuration * 1.2;//帧间隔
-const frameFastDuration = frameStdDuration * 0.8;//帧间隔
-export const speed = 8
+const frameDuration = 0.033;//帧间隔
+export const speed = 20
 class PlayerLogicData {
     serverCmdMap: Map<number, Map<number, proto.pb.IGameCMD>>
     clientCmdMap: Map<number, Map<number, proto.pb.IGameCMD>>
@@ -65,7 +63,8 @@ export class Player extends Component {
     private lbl_ping: Label
     private delay: number
     private offset: number
-
+    private lastDelay: number
+    private moveTween: Tween<Node>
     start() {
         this.red = find("red", this.node)
         this.blue = find("blue", this.node)
@@ -82,8 +81,11 @@ export class Player extends Component {
 
         PlayerMgr.register(this.group.groupType, this)
         console.log("game start!");
-        this.logicData.resetTickNo(msg.tickNo)
-        this.isStart = true
+        this.sendPing((expectServerIndex) => {
+            this.logicData.resetTickNo(expectServerIndex)
+            console.log(`reset${this.group.groupType}`, expectServerIndex)
+            this.isStart = true
+        })
         if (this.group.groupType == 1) {
             input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this)
             input.on(Input.EventType.KEY_UP, this.onKeyUp, this)
@@ -92,12 +94,12 @@ export class Player extends Component {
         this.getPomelo().on("logicTick", this.onCMDs)
     }
     getFrameDuration() {
-        if (this.offset == 0) {
-            return frameStdDuration
+        if (this.offset < 0) {
+            return frameDuration * 1.2
         } else if (this.offset > 0) {
-            return frameFastDuration
+            return frameDuration * 0.8
         }
-        return frameSlowDuration
+        return frameDuration
     }
     update(deltaTime: number) {
         if (this.isStart) {
@@ -143,7 +145,11 @@ export class Player extends Component {
     getPomelo() {
         return this.group.pomelo
     }
-    sendPing = () => {
+    getExpectServerTickNo(serverTickNo: number) {
+        let expectServerIndex = serverTickNo + this.lastDelay / (this.getFrameDuration() * 1000)
+        return Math.floor(expectServerIndex)
+    }
+    sendPing = (f?: Function) => {
         if (this.getPomelo() != null) {
             let cmd = proto.pb.PingReq.create()
             cmd.clientTickNo = this.logicData.clientTick
@@ -151,23 +157,28 @@ export class Player extends Component {
             let sendTime = Date.now()
             this.delayDo(() => {
                 this.getPomelo().request("room.room.ping", bytes, (data) => {
-                    this.delayDo(()=>{
-                        let delay = Date.now() - sendTime 
-                        this.lbl_ping.string = "ping:" + delay
+                    this.delayDo(() => {
                         let pong = proto.pb.PongRes.decode(data.body)
-                        if (pong.serverTickNo+delay/(this.getFrameDuration()*1000) > this.logicData.clientTick) {
+                        let delay = Date.now() - sendTime
+                        this.lastDelay = delay
+                        let expectServerIndex = this.getExpectServerTickNo(pong.serverTickNo)
+                        this.lbl_ping.string = "ping:" + delay
+                        if (expectServerIndex > this.logicData.clientTick) {
                             this.offset = 1
-                            // console.log("加速", pong.serverTickNo, this.logicData.clientTick)
-                        } else if (pong.serverTickNo + 5 < this.logicData.clientTick) {
-                            // console.log("减速")
+                            console.log(`加速${this.group.groupType}`, pong.serverTickNo, expectServerIndex, this.logicData.clientTick)
+                        } else if (expectServerIndex + 5 < this.logicData.clientTick) {
+                            console.log(`减速${this.group.groupType}`, pong.serverTickNo, expectServerIndex, this.logicData.clientTick)
                             this.offset = -1
                         } else {
                             this.offset = 0
-                            // console.log("常速")
-    
+                            // console.log(`常速${this.group.groupType}`, pong.serverTickNo, expectServerIndex, this.logicData.clientTick)
+
+                        }
+                        if (f) {
+                            f(expectServerIndex)
                         }
                     })
-                   
+
                 })
             })
 
@@ -217,6 +228,9 @@ export class Player extends Component {
 
 
     }
+    isSameCmd(a: proto.pb.IGameCMD, b: proto.pb.IGameCMD) {
+        return a.uid == b.uid && a.dir == b.dir && a.tickNo == b.tickNo
+    }
     onCMD(cmd: proto.pb.IGameCMD, fromServer: boolean) {
         if (cmd.uid != 1) {
             return
@@ -230,16 +244,36 @@ export class Player extends Component {
         }
         if (fromServer) {
             this.logicData.updateVerifiedTick(cmd.tickNo)
+
             pos = this.logicData.logicPos
         }
         let newPos = new Vec3(pos.x + cmd.dir * speed, pos.y, 0)
-        this.red.position = newPos
         if (fromServer) {
             this.logicData.logicPos = newPos
         }
         if (cmd.dir != 0) {
             console.log(`onCMD${this.group.groupType} after`, cmd, fromServer, this.red.position)
         }
+        if (this.group.enableSettle() && fromServer && this.isSameCmd(this.logicData.clientCmdMap.get(cmd.tickNo).get(this.group.groupType), cmd)) {
+            return
+        }
+        this.updateRenderPosition(newPos)
+    }
+    updateRenderPosition(newPos: Vec3) {
+        if (newPos.equals(this.red.position)) {
+            return
+        }
+        if (this.group.enableInterpolation()) {
+            if (this.moveTween) {
+                this.moveTween.stop();
+            }
+            this.moveTween = new Tween(this.red)
+            this.moveTween.to(0.1, { position: newPos }).start()
+        } else {
+
+            this.red.position = newPos
+        }
+
     }
     onDelayChange() {
         this.delay = Number(this.group.txt_delay.string)

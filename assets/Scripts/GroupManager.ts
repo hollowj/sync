@@ -22,8 +22,8 @@ export class Group extends Component {
    public  pomelo 
     start() {
         if (this.groupType==2){
-            let menuObj=find("menu",this.node)
-            menuObj.active=false
+            // let menuObj=find("menu",this.node)
+            // menuObj.active=false
         }
         this.pomelo= window.newPomelo()
         this.pomelo.on("io-error",ProtocolManager.onWSError)
