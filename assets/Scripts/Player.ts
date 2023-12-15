@@ -15,7 +15,8 @@ class PlayerLogicData {
     logicTick = 0
     clientTick = 0
     serverTick = 0
-    logicPos
+    logicServerPos
+    logicClientPos
 
     constructor() {
         this.serverCmdMap = new Map()
@@ -71,6 +72,10 @@ export class Player extends Component {
         this.lbl_ping = find("ping", this.node).getComponent(Label)
         this.group = this.getComponent(Group)
         this.group.txt_delay.node.on("text-changed", this.onDelayChange, this)
+        if (!this.logicData.logicClientPos ) {
+            let pos=this.red.position
+            this.logicData.logicClientPos = new Vec3(pos.x, pos.y, pos.z)
+        }
         this.onDelayChange()
         this.node.on(Event_GameStart, (event: GameEvent) => {
             this.gameStart(event.detail)
@@ -92,6 +97,7 @@ export class Player extends Component {
         }
 
         this.getPomelo().on("logicTick", this.onCMDs)
+       
     }
     getFrameDuration() {
         if (this.offset < 0) {
@@ -238,18 +244,18 @@ export class Player extends Component {
         if (cmd.dir != 0) {
             console.log(`onCMD${this.group.groupType} before `, cmd, fromServer, this.red.position)
         }
-        let pos = this.red.position
-        if (!this.logicData.logicPos) {
-            this.logicData.logicPos = new Vec3(pos.x, pos.y, pos.z)
+        let pos = this.logicData.logicClientPos
+        if (!this.logicData.logicServerPos ) {
+            this.logicData.logicServerPos = new Vec3(pos.x, pos.y, pos.z)
         }
+       
         if (fromServer) {
             this.logicData.updateVerifiedTick(cmd.tickNo)
-
-            pos = this.logicData.logicPos
+            pos = this.logicData.logicServerPos
         }
         let newPos = new Vec3(pos.x + cmd.dir * speed, pos.y, 0)
         if (fromServer) {
-            this.logicData.logicPos = newPos
+            this.logicData.logicServerPos = newPos
         }
         if (cmd.dir != 0) {
             console.log(`onCMD${this.group.groupType} after`, cmd, fromServer, this.red.position)
@@ -257,12 +263,16 @@ export class Player extends Component {
         if (this.group.enableSettle() && fromServer && this.isSameCmd(this.logicData.clientCmdMap.get(cmd.tickNo).get(this.group.groupType), cmd)) {
             return
         }
-        this.updateRenderPosition(newPos)
+        this.logicData.logicClientPos=newPos
+        this.updateRenderPosition()
     }
-    updateRenderPosition(newPos: Vec3) {
+    updateRenderPosition() {
+        let newPos= this.logicData.logicClientPos
         if (newPos.equals(this.red.position)) {
             return
         }
+        console.log(`updateRenderPosition${this.group.groupType}  `, newPos, this.red.position)
+
         if (this.group.enableInterpolation()) {
             if (this.moveTween) {
                 this.moveTween.stop();
